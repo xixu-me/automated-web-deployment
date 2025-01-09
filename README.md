@@ -72,6 +72,6 @@ Certificates will automatically renew monthly. No manual intervention required.
 
 ## License
 
-Copyright &copy; 2025 [Xi Xu](https://xi-xu.me). All rights reserved.
+Copyright &copy; [Xi Xu](https://xi-xu.me). All rights reserved.
 
 Licensed under the [GPL-3.0](LICENSE) license.  
