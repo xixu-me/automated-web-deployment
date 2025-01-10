@@ -13,20 +13,36 @@ A bash script to automatically set up a secure web server with SSL certificates 
 
 ## Prerequisites
 
-- Debian 12 or later
-- Root or sudo privileges
+- Debian 10+ 64-bit
+- Sudo privileges
+- Inbound traffic on TCP ports 80 and 443 from 0.0.0.0/0 allowed
 - Domain name pointing to your server's IP address
 
 ## Usage
 
+Log in as a non-root user and run:
+
 ```bash
-curl -s https://github.com/xixu-me/AWSDS/raw/main/setup.sh | bash -s <username> <domain> <id>
+curl -L https://github.com/xixu-me/AWSDS/raw/main/setup.sh | bash -s <username> <domain> <id>
 ```
 
 Replace the following:
-- `<username>`: Your system username
+
+- `<username>`: Your login username
 - `<domain>`: Your domain name
-- `<id>`: A unique identifier for security settings
+- `<id>`: A unique identifier
+
+If you encounter the following error:
+
+```bash
+bash: curl: command not found
+```
+
+Please install `curl` and `bash` first:
+
+```bash
+sudo apt update && sudo apt install -y curl bash
+```
 
 ## What Gets Installed
 
@@ -35,16 +51,6 @@ Replace the following:
 - Cron jobs for automated maintenance
 - Basic security configurations
 - Sample portfolio website
-
-## Default Web Template
-
-The script includes a responsive portfolio template featuring:
-- Professional layout
-- About section
-- Projects showcase
-- Skills display
-- Contact form
-- Mobile-friendly design
 
 ## Security Features
 
