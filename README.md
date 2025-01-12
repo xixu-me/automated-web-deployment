@@ -6,7 +6,6 @@ A bash script to automatically set up a secure web server with SSL certificates 
 
 - Automated NGINX installation and configuration
 - SSL certificate automation with acme.sh
-- Professional portfolio webpage template
 - Automatic security hardening
 - Scheduled certificate renewal
 - System optimization for performance
@@ -50,7 +49,6 @@ sudo apt update && sudo apt install -y curl bash
 - SSL certificate management tools
 - Cron jobs for automated maintenance
 - Basic security configurations
-- Sample portfolio website
 
 ## Security Features
 
