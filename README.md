@@ -19,7 +19,14 @@ A bash script to automatically set up a secure web server with SSL certificates 
 
 ## Usage
 
-Log in as a non-root user and run:
+Log in as a non-root user and update your system:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+Run the script:
 
 ```bash
 curl -L https://github.com/xixu-me/AWSDS/raw/main/setup.sh | bash -s <username> <domain> <id>
