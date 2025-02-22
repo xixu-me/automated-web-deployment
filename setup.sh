@@ -11,9 +11,7 @@ USERNAME="$1"
 DOMAIN="$2"
 ID="$3"
 
-# Update and install required packages
-sudo apt update
-sudo apt upgrade -y
+# Install required packages
 sudo apt install cron nginx -y
 
 # Configure web server permissions and files
