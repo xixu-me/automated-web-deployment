@@ -1,21 +1,24 @@
 # AWSDS - Automated Web Server Deployment Script
 
-A bash script to automatically set up a secure web server with SSL certificates on Debian.
+A comprehensive setup script for deploying a secure server environment with Nginx, Docker, X, and Open WebUI.
 
-## Features
+## Overview
 
-- Automated NGINX installation and configuration
-- SSL certificate automation with acme.sh
-- Automatic security hardening
-- Scheduled certificate renewal
-- System optimization for performance
+This repository contains a bash script that automates the setup of a complete server environment on a Debian system. The script sets up:
 
-## Prerequisites
+- Nginx web server with a professional portfolio template
+- SSL/TLS certificates via acme.sh
+- Docker and Docker Compose
+- Open WebUI (running in Docker)
+- X proxy server with secure configuration
+- Automatic certificate renewal
 
-- Debian 10+ 64-bit
+## Requirements
+
+- Debian 10+ 64-bit system
 - Sudo privileges
+- Domain name pointing to your server
 - Inbound traffic on TCP ports 80 and 443 from 0.0.0.0/0 allowed
-- Domain name pointing to your server's IP address
 
 ## Usage
 
@@ -35,8 +38,8 @@ curl -L https://github.com/xixu-me/AWSDS/raw/main/setup.sh | bash -s <username> 
 Replace the following:
 
 - `<username>`: Your login username
-- `<domain>`: Your domain name
-- `<id>`: A unique identifier
+- `<domain>`: Your domain name (must be pointed to this server)
+- `<id>`: A unique ID for the X configuration
 
 If you encounter the following error:
 
@@ -50,25 +53,39 @@ Please install `curl` and `bash` first:
 sudo apt update && sudo apt install -y curl bash
 ```
 
-## What Gets Installed
+## Features
 
-- NGINX web server
-- SSL certificate management tools
-- Cron jobs for automated maintenance
-- Basic security configurations
+### Web Server
 
-## Security Features
+- Configures Nginx with a professional portfolio template
+- Sets up automatic HTTPS redirection
+- Implements proper security headers
 
-- TLS 1.2/1.3 support
-- Automatic certificate renewal
-- HTTP to HTTPS redirection
-- HSTS implementation
-- Private IP filtering
-- Security headers
+### SSL/TLS Certificates
 
-## Maintenance
+- Automatically obtains and configures Let's Encrypt certificates
+- Sets up automatic renewal via cron job
 
-Certificates will automatically renew monthly. No manual intervention required.
+### Docker Environment
+
+- Installs Docker and Docker Compose
+- Configures Open WebUI in a Docker container
+- Sets up proper restart policies
+
+### Proxy Configuration
+
+- Installs and configures X
+- Implements secure TLS settings
+- Configures proper routing rules
+
+## Security Considerations
+
+This script implements several security best practices:
+
+- Uses TLS 1.2+ for all connections
+- Implements proper certificate handling
+- Configures firewall rules to block unwanted traffic
+- Sets up proper user permissions
 
 ## Disclaimer
 
