@@ -302,7 +302,7 @@ cat >~/cert/cert-renew.sh <<EOF
 #!/bin/bash
 /home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc --fullchain-file /home/$USERNAME/cert/x.crt --key-file /home/$USERNAME/cert/x.key
 echo "X Certificates Renewed"
-chmod +r /home/$USERNAME/cert/xra.key
+chmod +r /home/$USERNAME/cert/x.key
 echo "Read Permission Granted for Private Key"
 sudo systemctl restart xray
 echo "X Restarted"
