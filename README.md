@@ -31,7 +31,7 @@ sudo apt update && sudo apt upgrade -y
 Run the script:
 
 ```bash
-curl -L https://github.com/xixu-me/AWSDS/raw/main/setup.sh | bash -s <username> <domain> <id>
+curl -L https://github.com/xixu-me/X-WebUI/raw/main/setup.sh | bash -s <username> <domain> <id>
 ```
 
 Replace the following:
