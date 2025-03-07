@@ -1,4 +1,4 @@
-# AWSDS - Automated Web Server Deployment Script
+# X-WebUI
 
 A comprehensive setup script for deploying a secure server environment with Nginx, Docker, X, and Open WebUI.
 
