@@ -25,8 +25,7 @@ This repository contains a bash script that automates the setup of a complete se
 Log in as a non-root user and update your system:
 
 ```bash
-sudo apt update
-sudo apt upgrade -y
+sudo apt update && sudo apt upgrade -y
 ```
 
 Run the script:
