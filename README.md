@@ -56,7 +56,7 @@ sudo apt update && sudo apt install -y curl bash
 
 ### Web Server
 
-- Configures Nginx with a professional portfolio template
+- Configures Nginx
 - Sets up automatic HTTPS redirection
 - Implements proper security headers
 
