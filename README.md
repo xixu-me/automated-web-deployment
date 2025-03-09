@@ -6,7 +6,7 @@ A comprehensive setup script for deploying a secure server environment with Ngin
 
 This repository contains a bash script that automates the setup of a complete server environment on a Debian system. The script sets up:
 
-- Nginx web server with a professional portfolio template
+- Nginx web server
 - SSL/TLS certificates via acme.sh
 - Docker and Docker Compose
 - Open WebUI (running in Docker)
