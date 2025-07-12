@@ -12,7 +12,7 @@ DOMAIN="$2"
 ID="$3"
 
 # Install required packages
-sudo apt install cron nginx ca-certificates curl -y
+sudo apt install cron nginx -y
 
 # Configure web server permissions and files
 sudo chown -R "$USERNAME:$USERNAME" /var/www
@@ -269,26 +269,6 @@ curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 ~/.acme.sh/acme.sh --issue -d "$DOMAIN" -w /var/www/html --keylength ec-256 --force
 
-# Add Docker's official GPG key
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-# Add the repository to Apt sources
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-sudo apt update
-
-# Install Docker
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
-
-# Install Open WebUI
-sudo docker pull ghcr.io/open-webui/open-webui:main
-sudo docker run -d -p 8888:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
-sudo docker update --restart=unless-stopped open-webui
-
 # Install X
 sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
@@ -415,12 +395,12 @@ http {
         server_name $DOMAIN;
         return 301 https://\$http_host\$request_uri;
     }
-    # server {
-    #     listen 8888;
-    #     root /var/www/html;
-    #     index index.html;
-    #     add_header Strict-Transport-Security "max-age=63072000" always;
-    # }
+    server {
+        listen 8888;
+        root /var/www/html;
+        index index.html;
+        add_header Strict-Transport-Security "max-age=63072000" always;
+    }
     sendfile on;
     tcp_nopush on;
     types_hash_max_size 2048;
