@@ -90,10 +90,10 @@ To customize the portfolio:
 ```text
 /var/www/html/           # Web root directory
 ├── index.html           # Portfolio website
-~/cert/                  # SSL certificates directory
-├── x.crt               # SSL certificate
-├── x.key               # Private key
-└── cert-renew.sh       # Certificate renewal script
+/etc/xray/cert/          # SSL certificates directory
+├── x.crt                # SSL certificate
+├── x.key                # Private key
+└── cert-renew.sh        # Certificate renewal script
 ```
 
 ## 🔒 Security Features

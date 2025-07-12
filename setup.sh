@@ -273,26 +273,26 @@ curl https://get.acme.sh | sh
 sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 # Setup certificates
-mkdir ~/cert
-~/.acme.sh/acme.sh --install-cert -d "$DOMAIN" --ecc --fullchain-file ~/cert/x.crt --key-file ~/cert/x.key
-chmod +r ~/cert/x.key
+sudo mkdir -p /etc/xray/cert
+~/.acme.sh/acme.sh --install-cert -d "$DOMAIN" --ecc --fullchain-file /etc/xray/cert/x.crt --key-file /etc/xray/cert/x.key
+chmod +r /etc/xray/cert/x.key
 
 # Create certificate renewal script
-cat >~/cert/cert-renew.sh <<EOF
+cat >/etc/xray/cert/cert-renew.sh <<EOF
 #!/bin/bash
-/home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc --fullchain-file /home/$USERNAME/cert/x.crt --key-file /home/$USERNAME/cert/x.key
+/home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc --fullchain-file /etc/xray/cert/x.crt --key-file /etc/xray/cert/x.key
 echo "X Certificates Renewed"
-chmod +r /home/$USERNAME/cert/x.key
+chmod +r /etc/xray/cert/x.key
 echo "Read Permission Granted for Private Key"
 sudo systemctl restart xray
 echo "X Restarted"
 EOF
 
-chmod +x ~/cert/cert-renew.sh
+chmod +x /etc/xray/cert/cert-renew.sh
 
 # Setup cron job
 crontab -l >temp_cron
-echo "0 1 1 * *   bash /home/$USERNAME/cert/cert-renew.sh" >>temp_cron
+echo "0 1 1 * *   bash /etc/xray/cert/cert-renew.sh" >>temp_cron
 crontab temp_cron
 rm temp_cron
 
@@ -340,8 +340,8 @@ sudo tee /usr/local/etc/xray/config.json >/dev/null <<EOF
                     "minVersion": "1.2",
                     "certificates": [
                         {
-                            "certificateFile": "/home/$USERNAME/cert/x.crt",
-                            "keyFile": "/home/$USERNAME/cert/x.key"
+                            "certificateFile": "/etc/xray/cert/x.crt",
+                            "keyFile": "/etc/xray/cert/x.key"
                         }
                     ]
                 }
