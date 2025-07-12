@@ -93,7 +93,7 @@ To customize the portfolio:
 /etc/xray/cert/          # SSL certificates directory
 ├── x.crt                # SSL certificate
 ├── x.key                # Private key
-└── cert-renew.sh        # Certificate renewal script
+└── renew.sh             # Certificate renewal script
 ```
 
 ## 🔒 Security Features
@@ -110,7 +110,7 @@ To customize the portfolio:
 Certificates are automatically renewed monthly via cron job. To manually renew:
 
 ```bash
-bash ~/cert/etc/xray/cert/cert-renew.sh
+bash ~/cert/etc/xray/cert/renew.sh
 ```
 
 ### Nginx Configuration

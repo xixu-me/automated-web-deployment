@@ -278,7 +278,7 @@ sudo mkdir -p /etc/xray/cert
 chmod +r /etc/xray/cert/x.key
 
 # Create certificate renewal script
-cat >/etc/xray/cert/cert-renew.sh <<EOF
+cat >/etc/xray/cert/renew.sh <<EOF
 #!/bin/bash
 /home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc --fullchain-file /etc/xray/cert/x.crt --key-file /etc/xray/cert/x.key
 echo "X Certificates Renewed"
@@ -288,11 +288,11 @@ sudo systemctl restart xray
 echo "X Restarted"
 EOF
 
-chmod +x /etc/xray/cert/cert-renew.sh
+chmod +x /etc/xray/cert/renew.sh
 
 # Setup cron job
 crontab -l >temp_cron
-echo "0 1 1 * *   bash /etc/xray/cert/cert-renew.sh" >>temp_cron
+echo "0 1 1 * *   bash /etc/xray/cert/renew.sh" >>temp_cron
 crontab temp_cron
 rm temp_cron
 
