@@ -110,7 +110,7 @@ To customize the portfolio:
 Certificates are automatically renewed monthly via cron job. To manually renew:
 
 ```bash
-bash ~/cert/cert-renew.sh
+bash ~/cert/etc/xray/cert/cert-renew.sh
 ```
 
 ### Nginx Configuration
