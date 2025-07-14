@@ -90,10 +90,10 @@ To customize the portfolio:
 ```text
 /var/www/html/           # Web root directory
 ├── index.html           # Portfolio website
-/etc/xray/cert/          # SSL certificates directory
-├── x.crt                # SSL certificate
-├── x.key                # Private key
-└── renew.sh             # Certificate renewal script
+~/cert/                  # SSL certificates directory
+├── x.crt               # SSL certificate
+├── x.key               # Private key
+└── cert-renew.sh       # Certificate renewal script
 ```
 
 ## 🔒 Security Features
@@ -110,7 +110,7 @@ To customize the portfolio:
 Certificates are automatically renewed monthly via cron job. To manually renew:
 
 ```bash
-bash /cert/etc/xray/cert/renew.sh
+bash ~/cert/cert-renew.sh
 ```
 
 ### Nginx Configuration
