@@ -295,7 +295,7 @@ mkdir ~/cert
 chmod +r ~/cert/x.key
 
 # Create certificate renewal script
-cat >~/cert/cert-renew.sh <<EOF
+cat >~/cert/renew.sh <<EOF
 #!/bin/bash
 
 # Certificate renewal script for $DOMAIN
@@ -337,10 +337,10 @@ else
 fi
 EOF
 
-chmod +x ~/cert/cert-renew.sh
+chmod +x ~/cert/renew.sh
 
 # Setup cron jobs
-(crontab -l 2>/dev/null; echo "0 2 * * 0 /home/$USERNAME/cert/cert-renew.sh >> /home/$USERNAME/cert/renewal.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "0 2 * * 0 /home/$USERNAME/cert/renew.sh >> /home/$USERNAME/cert/renewal.log 2>&1") | crontab -
 
 # Configure X
 echo "Configuring X..."
@@ -499,7 +499,7 @@ echo "ID: $ID"
 echo "Certificate location: ~/cert/"
 echo "Nginx configuration: /etc/nginx/nginx.conf"
 echo "X configuration: /usr/local/etc/xray/config.json"
-echo "Certificate renewal script: ~/cert/cert-renew.sh"
+echo "Certificate renewal script: ~/cert/renew.sh"
 echo "Automatic renewal: Configured via cron (weekly check)"
 echo "=============================================="
 echo "The system will reboot in 10 seconds..."
