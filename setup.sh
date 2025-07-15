@@ -28,7 +28,7 @@ sudo chown -R "$USERNAME:$USERNAME" /var/www
 sudo mkdir -p /var/www/html/.well-known/acme-challenge
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod 755 /var/www/html/.well-known/acme-challenge
-rm -f /var/www/html/index.nginx-debian.html
+sudo rm -f /var/www/html/index.nginx-debian.html
 
 # Create index.html
 cat >/var/www/html/index.html <<'EOF'
