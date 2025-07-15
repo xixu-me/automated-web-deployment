@@ -242,7 +242,8 @@ EOF
 
 # Set proper ownership and permissions for web files
 sudo chown -R www-data:www-data /var/www/html
-sudo chmod 755 /var/www/html/.well-known/acme-challenge
+sudo chown -R "$USERNAME:www-data" /var/www/html/.well-known/acme-challenge
+sudo chmod 775 /var/www/html/.well-known/acme-challenge
 
 # Initial nginx configuration
 sudo tee /etc/nginx/nginx.conf >/dev/null <<EOF
