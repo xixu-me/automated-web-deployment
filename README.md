@@ -1,34 +1,24 @@
 # Automated Web Deployment Script
 
-A bash script for automating the deployment of a professional portfolio website with SSL certificate management on Ubuntu/Debian servers.
+A comprehensive automation script for deploying professional portfolio websites with SSL certificates and optimized web server configuration.
 
-## Overview
+## 🚀 Features
 
-This repository contains an automated deployment script that sets up a complete web server environment with:
+- **Automated Web Server Setup**: Configures Nginx with optimized settings
+- **SSL Certificate Management**: Automatic SSL certificate provisioning and renewal using acme.sh
+- **Professional Portfolio Template**: Includes a beautiful, responsive portfolio website
+- **System Optimization**: Configures BBR congestion control and other performance optimizations
+- **Certificate Auto-Renewal**: Sets up automated certificate renewal via cron jobs
+- **Security Headers**: Implements HSTS and other security best practices
 
-- **Nginx web server** with optimized configuration
-- **SSL certificate management** using acme.sh and Let's Encrypt
-- **Professional portfolio website** with modern, responsive design
-- **Automatic certificate renewal** via cron jobs
-- **Security optimizations** and best practices
-
-## Features
-
-- 🚀 **One-command deployment** - Deploy everything with a single script
-- 🔒 **Automatic SSL** - Generates and manages SSL certificates
-- 📱 **Responsive design** - Mobile-friendly portfolio website
-- 🔄 **Auto-renewal** - Certificates renew automatically
-- ⚡ **Performance optimized** - BBR congestion control and optimized settings
-- 🛡️ **Security hardened** - HTTPS redirects and security headers
-
-## Prerequisites
+## 📋 Prerequisites
 
 - Ubuntu/Debian-based Linux server
 - Root or sudo access
 - Domain name pointing to your server's IP address
 - Open ports 80 and 443
 
-## Usage
+## 🛠️ Usage
 
 1. Log in as a non-root user and update your system:
 
@@ -63,111 +53,97 @@ This repository contains an automated deployment script that sets up a complete 
 ### Example
 
 ```bash
-curl -L https://github.com/xixu-me/automated-web-deployment/raw/main/setup.sh | bash -s john example.com 550e8400-e29b-41d4-a716-446655440000
+./setup.sh john example.com 12345678-1234-1234-1234-123456789abc
 ```
 
-## What Gets Installed
+## 🎨 Portfolio Features
 
-The script automatically installs and configures:
+The included portfolio template features:
 
-1. **System packages**: nginx, wget, unzip, openssl, cron
-2. **Web server**: Nginx with optimized configuration
-3. **SSL certificates**: Let's Encrypt certificates via acme.sh
-4. **Portfolio website**: Professional HTML/CSS portfolio template
-5. **Security settings**: System optimizations and security headers
+- **Responsive Design**: Works on all devices and screen sizes
+- **Modern UI**: Clean, professional design with CSS Grid and Flexbox
+- **Contact Form**: Ready-to-use contact form structure
+- **Project Showcase**: Grid layout for displaying projects
+- **Skills Section**: Tag-based skills display
+- **SEO Optimized**: Proper HTML structure and meta tags
 
-## Post-Installation
+### Customization
 
-After the script completes:
-
-- Your website will be accessible at `https://yourdomain.com`
-- SSL certificates will auto-renew weekly
-- The server will reboot automatically to apply all changes
-
-## File Structure
-
-```text
-/var/www/html/          # Website files
-~/cert/                 # SSL certificates
-~/cert/renew.sh         # Certificate renewal script
-```
-
-## Certificate Management
-
-- **Location**: `~/cert/x.crt` and `~/cert/x.key`
-- **Renewal**: Automatic weekly check via cron
-- **Logs**: Certificate renewal logs in `~/cert/renewal.log`
-
-## Customization
-
-To customize the portfolio website:
+To customize the portfolio:
 
 1. Edit `/var/www/html/index.html` after installation
-2. Modify the content, styling, and information as needed
-3. The website uses modern CSS with responsive design
+2. Modify the personal information, projects, and skills
+3. Update the color scheme by changing CSS custom properties
 
-## Troubleshooting
+## 🔧 What the Script Does
+
+1. **Package Installation**: Installs required packages (cron, nginx)
+2. **Web Server Configuration**: Sets up Nginx with optimized configuration
+3. **SSL Certificate Setup**: Provisions SSL certificates using Let's Encrypt
+4. **Portfolio Deployment**: Creates and deploys a professional portfolio website
+5. **Auto-Renewal Setup**: Configures automatic certificate renewal
+6. **System Optimization**: Applies performance optimizations
+7. **Security Configuration**: Implements security headers and HTTPS redirect
+
+## 📁 File Structure
+
+```text
+/var/www/html/           # Web root directory
+├── index.html           # Portfolio website
+~/cert/                  # SSL certificates directory
+├── x.crt               # SSL certificate
+├── x.key               # Private key
+└── cert-renew.sh       # Certificate renewal script
+```
+
+## 🔒 Security Features
+
+- **HTTPS Redirect**: Automatic HTTP to HTTPS redirection
+- **HSTS Headers**: Strict Transport Security implementation
+- **SSL Configuration**: Modern TLS protocols and cipher suites
+- **Secure File Permissions**: Proper file ownership and permissions
+
+## 🔄 Maintenance
+
+### Certificate Renewal
+
+Certificates are automatically renewed monthly via cron job. To manually renew:
+
+```bash
+bash ~/cert/cert-renew.sh
+```
+
+### Nginx Configuration
+
+Main configuration file: `/etc/nginx/nginx.conf`
+
+To reload Nginx after changes:
+
+```bash
+sudo systemctl reload nginx
+```
+
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-1. **Domain not pointing to server**: Ensure your domain's DNS A record points to your server's IP
+1. **Domain not pointing to server**: Ensure DNS A record points to your server's IP
 2. **Firewall blocking ports**: Make sure ports 80 and 443 are open
-3. **Permission errors**: Run the script as a non-root user with sudo access
+3. **Permission errors**: Ensure script is run with appropriate privileges
 
-### Service Status
+### Log Files
 
-Check if services are running:
+- Nginx access logs: `/var/log/nginx/access.log`
+- Nginx error logs: `/var/log/nginx/error.log`
+- System logs: `journalctl -u nginx`
 
-```bash
-sudo systemctl status nginx
-```
-
-### Certificate Status
-
-Check certificate expiration:
-
-```bash
-openssl x509 -in ~/cert/x.crt -text -noout | grep -E "(Not Before|Not After)"
-```
-
-## Security Considerations
-
-- The script implements security best practices including HTTPS redirects
-- Uses modern TLS protocols (TLSv1.2 and TLSv1.3)
-- Applies security headers and optimized configurations
-- Regular certificate renewals prevent expiration
-
-## License
+## 📝 License
 
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
-## Disclaimer
+## ⚠️ Important Notes
 
-⚠️ **Important Notice**
-
-This script is provided for educational and legitimate web deployment purposes only. Users are responsible for:
-
-- Ensuring compliance with all applicable laws and regulations
-- Proper server security and maintenance
-- Understanding the configurations being applied to their systems
-- Regular security updates and monitoring
-
-The authors and contributors of this project:
-
-- Make no warranties about the security, reliability, or suitability of this script
-- Are not responsible for any damage, data loss, or security breaches
-- Recommend thorough testing in a development environment before production use
-- Advise users to review and understand the script before execution
-
-**Use at your own risk.** Always backup your data and test in a safe environment first.
-
-## Support
-
-For issues and questions:
-
-- Review the troubleshooting section above
-- Ensure you're using a supported operating system (Ubuntu/Debian)
-
----
-
-**Note**: This script automatically reboots the server after installation to apply all system optimizations.
+- This script will reboot the server at the end of installation
+- Backup any existing Nginx configuration before running
+- The script is designed for fresh server installations
+- Domain validation is required for SSL certificate issuance
