@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # Exit on any error
+
 # Check if all required parameters are provided
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <username> <domain> <id>"
@@ -11,12 +13,22 @@ USERNAME="$1"
 DOMAIN="$2"
 ID="$3"
 
+echo "Starting server initialization..."
+echo "Username: $USERNAME"
+echo "Domain: $DOMAIN"
+echo "ID: $ID"
+
 # Install required packages
-sudo apt install cron nginx -y
+echo "Installing required packages..."
+sudo apt install cron nginx wget unzip openssl -y
 
 # Configure web server permissions and files
+echo "Configuring web server..."
 sudo chown -R "$USERNAME:$USERNAME" /var/www
-rm /var/www/html/index.nginx-debian.html
+sudo mkdir -p /var/www/html/.well-known/acme-challenge
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod 755 /var/www/html/.well-known/acme-challenge
+rm -f /var/www/html/index.nginx-debian.html
 
 # Create index.html
 cat >/var/www/html/index.html <<'EOF'
@@ -264,15 +276,20 @@ EOF
 sudo systemctl reload nginx
 
 # Install and configure acme.sh
+echo "Installing and configuring acme.sh..."
 curl https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --upgrade --auto-upgrade
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+
+echo "Issuing SSL certificate for $DOMAIN..."
 ~/.acme.sh/acme.sh --issue -d "$DOMAIN" -w /var/www/html --keylength ec-256 --force
 
 # Install X
+echo "Installing X..."
 sudo bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
 
 # Setup certificates
+echo "Setting up certificates..."
 mkdir ~/cert
 ~/.acme.sh/acme.sh --install-cert -d "$DOMAIN" --ecc --fullchain-file ~/cert/x.crt --key-file ~/cert/x.key
 chmod +r ~/cert/x.key
@@ -280,23 +297,53 @@ chmod +r ~/cert/x.key
 # Create certificate renewal script
 cat >~/cert/cert-renew.sh <<EOF
 #!/bin/bash
-/home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc --fullchain-file /home/$USERNAME/cert/x.crt --key-file /home/$USERNAME/cert/x.key
-echo "X Certificates Renewed"
-chmod +r /home/$USERNAME/cert/x.key
-echo "Read Permission Granted for Private Key"
-sudo systemctl restart xray
-echo "X Restarted"
+
+# Certificate renewal script for $DOMAIN
+# This script renews the certificate and installs it for x
+
+echo "Starting certificate renewal for $DOMAIN..."
+
+# Try to renew the certificate using acme.sh (will skip if not due for renewal)
+RENEW_OUTPUT=\$(/home/$USERNAME/.acme.sh/acme.sh --renew -d $DOMAIN --ecc 2>&1)
+RENEW_EXIT_CODE=\$?
+
+echo "\$RENEW_OUTPUT"
+
+# If renewal was successful (exit code 0) or skipped (exit code 2), proceed with installation
+if [ \$RENEW_EXIT_CODE -eq 0 ] || [ \$RENEW_EXIT_CODE -eq 2 ]; then
+    # Install/reinstall the certificate
+    /home/$USERNAME/.acme.sh/acme.sh --install-cert -d $DOMAIN --ecc \\
+        --fullchain-file /home/$USERNAME/cert/x.crt \\
+        --key-file /home/$USERNAME/cert/x.key
+
+    echo "X Certificates Renewed/Reinstalled"
+
+    # Set proper permissions for the private key
+    chmod +r /home/$USERNAME/cert/x.key
+    echo "Read Permission Granted for Private Key"
+
+    # Restart x service to use the certificate
+    sudo systemctl restart xray
+    echo "X Restarted"
+
+    # Verify the certificate
+    echo "Certificate details:"
+    openssl x509 -in /home/$USERNAME/cert/x.crt -text -noout | grep -E "(Subject:|Issuer:|Not Before|Not After)"
+
+    echo "Certificate renewal/installation completed successfully!"
+else
+    echo "Certificate renewal failed with exit code \$RENEW_EXIT_CODE"
+    exit 1
+fi
 EOF
 
 chmod +x ~/cert/cert-renew.sh
 
-# Setup cron job
-crontab -l >temp_cron
-echo "0 1 1 * *   bash /home/$USERNAME/cert/cert-renew.sh" >>temp_cron
-crontab temp_cron
-rm temp_cron
+# Setup cron jobs
+(crontab -l 2>/dev/null; echo "0 2 * * 0 /home/$USERNAME/cert/cert-renew.sh >> /home/$USERNAME/cert/renewal.log 2>&1") | crontab -
 
 # Configure X
+echo "Configuring X..."
 sudo tee /usr/local/etc/xray/config.json >/dev/null <<EOF
 {
     "dns": {
@@ -370,16 +417,18 @@ sudo tee /usr/local/etc/xray/config.json >/dev/null <<EOF
 EOF
 
 # Start and enable X
+echo "Starting and enabling X service..."
 sudo systemctl start xray
 sudo systemctl enable xray
 
 # Configure system settings
+echo "Optimizing system settings..."
 sudo tee /etc/sysctl.conf >/dev/null <<'EOF'
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 EOF
 
-# Final nginx configuration
+# Final nginx configuration with ACME challenge support
 sudo tee /etc/nginx/nginx.conf >/dev/null <<EOF
 user www-data;
 worker_processes auto;
@@ -393,7 +442,17 @@ http {
     server {
         listen 80;
         server_name $DOMAIN;
-        return 301 https://\$http_host\$request_uri;
+        
+        # Allow ACME challenge for certificate renewal
+        location ^~ /.well-known/acme-challenge/ {
+            root /var/www/html;
+            try_files \$uri =404;
+        }
+        
+        # Redirect everything else to HTTPS
+        location / {
+            return 301 https://\$http_host\$request_uri;
+        }
     }
     server {
         listen 8888;
@@ -416,5 +475,33 @@ http {
 EOF
 
 # Restart services and system
+echo "Restarting services..."
 sudo systemctl restart nginx
+
+# Verify certificate installation
+echo "Verifying certificate installation..."
+if [ -f ~/cert/x.crt ]; then
+    echo "Certificate details:"
+    openssl x509 -in ~/cert/x.crt -text -noout | grep -E "(Subject:|Issuer:|Not Before|Not After)"
+else
+    echo "Warning: Certificate file not found"
+fi
+
+# Check service status
+echo "Checking service status..."
+sudo systemctl is-active --quiet nginx && echo "✓ Nginx is running" || echo "✗ Nginx is not running"
+sudo systemctl is-active --quiet xray && echo "✓ X is running" || echo "✗ X is not running"
+
+echo "Server initialization completed successfully!"
+echo "=============================================="
+echo "Domain: $DOMAIN"
+echo "ID: $ID"
+echo "Certificate location: ~/cert/"
+echo "Nginx configuration: /etc/nginx/nginx.conf"
+echo "X configuration: /usr/local/etc/xray/config.json"
+echo "Certificate renewal script: ~/cert/cert-renew.sh"
+echo "Automatic renewal: Configured via cron (weekly check)"
+echo "=============================================="
+echo "The system will reboot in 10 seconds..."
+sleep 10
 sudo reboot
