@@ -26,9 +26,7 @@ sudo apt install cron nginx wget unzip openssl -y
 echo "Configuring web server..."
 sudo chown -R "$USERNAME:$USERNAME" /var/www
 sudo mkdir -p /var/www/html/.well-known/acme-challenge
-sudo chown -R www-data:www-data /var/www/html
-sudo chmod 755 /var/www/html/.well-known/acme-challenge
-sudo rm -f /var/www/html/index.nginx-debian.html
+rm -f /var/www/html/index.nginx-debian.html
 
 # Create index.html
 cat >/var/www/html/index.html <<'EOF'
@@ -241,6 +239,10 @@ cat >/var/www/html/index.html <<'EOF'
     </body>
 </html>
 EOF
+
+# Set proper ownership and permissions for web files
+sudo chown -R www-data:www-data /var/www/html
+sudo chmod 755 /var/www/html/.well-known/acme-challenge
 
 # Initial nginx configuration
 sudo tee /etc/nginx/nginx.conf >/dev/null <<EOF
