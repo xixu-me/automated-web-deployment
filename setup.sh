@@ -344,8 +344,8 @@ sudo tee /usr/local/etc/xray/config.json >/dev/null <<EOF
                 "security": "tls",
                 "tlsSettings": {
                     "rejectUnknownSni": true,
-                    "alpn": "http/1.1",
-                    "minVersion": "1.2",
+                    "alpn": ["http/1.1"],
+                    "minVersion": "1.3",
                     "certificates": [
                         {
                             "certificateFile": "/home/$USERNAME/cert/x.crt",
