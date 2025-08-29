@@ -369,8 +369,8 @@ sudo tee /usr/local/etc/xray/config.json >/dev/null <<EOF
     "policy": {
         "levels": {
             "0": {
-                "handshake": 2,
-                "connIdle": 150
+                "handshake": 4,
+                "connIdle": 300
             }
         }
     }
