@@ -1,149 +1,104 @@
-# Automated Web Deployment Script
+# X-WebUI
 
-A comprehensive automation script for deploying professional portfolio websites with SSL certificates and optimized web server configuration.
+A comprehensive setup script for deploying a secure server environment with Nginx, Docker, X, and Open WebUI.
 
-## 🚀 Features
+## Overview
 
-- **Automated Web Server Setup**: Configures Nginx with optimized settings
-- **SSL Certificate Management**: Automatic SSL certificate provisioning and renewal using acme.sh
-- **Professional Portfolio Template**: Includes a beautiful, responsive portfolio website
-- **System Optimization**: Configures BBR congestion control and other performance optimizations
-- **Certificate Auto-Renewal**: Sets up automated certificate renewal via cron jobs
-- **Security Headers**: Implements HSTS and other security best practices
+This repository contains a bash script that automates the setup of a complete server environment on a Debian system. The script sets up:
 
-## 📋 Prerequisites
+- Nginx web server
+- SSL/TLS certificates via acme.sh
+- Docker and Docker Compose
+- Open WebUI (running in Docker)
+- X proxy server with secure configuration
+- Automatic certificate renewal
 
-- Ubuntu/Debian-based Linux server
-- Root or sudo access
-- Domain name pointing to your server's IP address
-- Open ports 80 and 443
+## Requirements
 
-## 🛠️ Usage
+- Debian 10+ 64-bit system
+- Sudo privileges
+- Domain name pointing to your server
+- Inbound traffic on TCP ports 80 and 443 from 0.0.0.0/0 allowed
 
-1. Log in as a non-root user and update your system:
+## Usage
 
-    ```bash
-    sudo apt update && sudo apt upgrade -y
-    ```
-
-2. Run the setup script with required parameters:
-
-    ```bash
-    curl -L https://github.com/xixu-me/automated-web-deployment/raw/main/setup.sh | bash -s <username> <domain> <unique-id>
-    ```
-
-3. If you encounter the following error:
-
-    ```text
-    bash: curl: command not found
-    ```
-
-    Please install `curl` and `bash` first:
-
-    ```bash
-    sudo apt install curl bash -y
-    ```
-
-### Parameters
-
-- `<username>`: Your system username
-- `<domain>`: Your domain name (e.g., example.com)
-- `<unique-id>`: A unique identifier (UUID format recommended)
-
-### Example
+Log in as a non-root user and update your system:
 
 ```bash
-./setup.sh john example.com 12345678-1234-1234-1234-123456789abc
+sudo apt update && sudo apt upgrade -y
 ```
 
-## 🎨 Portfolio Features
-
-The included portfolio template features:
-
-- **Responsive Design**: Works on all devices and screen sizes
-- **Modern UI**: Clean, professional design with CSS Grid and Flexbox
-- **Contact Form**: Ready-to-use contact form structure
-- **Project Showcase**: Grid layout for displaying projects
-- **Skills Section**: Tag-based skills display
-- **SEO Optimized**: Proper HTML structure and meta tags
-
-### Customization
-
-To customize the portfolio:
-
-1. Edit `/var/www/html/index.html` after installation
-2. Modify the personal information, projects, and skills
-3. Update the color scheme by changing CSS custom properties
-
-## 🔧 What the Script Does
-
-1. **Package Installation**: Installs required packages (cron, nginx)
-2. **Web Server Configuration**: Sets up Nginx with optimized configuration
-3. **SSL Certificate Setup**: Provisions SSL certificates using Let's Encrypt
-4. **Portfolio Deployment**: Creates and deploys a professional portfolio website
-5. **Auto-Renewal Setup**: Configures automatic certificate renewal
-6. **System Optimization**: Applies performance optimizations
-7. **Security Configuration**: Implements security headers and HTTPS redirect
-
-## 📁 File Structure
-
-```text
-/var/www/html/           # Web root directory
-├── index.html           # Portfolio website
-~/cert/                  # SSL certificates directory
-├── x.crt               # SSL certificate
-├── x.key               # Private key
-└── cert-renew.sh       # Certificate renewal script
-```
-
-## 🔒 Security Features
-
-- **HTTPS Redirect**: Automatic HTTP to HTTPS redirection
-- **HSTS Headers**: Strict Transport Security implementation
-- **SSL Configuration**: Modern TLS protocols and cipher suites
-- **Secure File Permissions**: Proper file ownership and permissions
-
-## 🔄 Maintenance
-
-### Certificate Renewal
-
-Certificates are automatically renewed monthly via cron job. To manually renew:
+Run the script:
 
 ```bash
-bash ~/cert/cert-renew.sh
+curl -L https://github.com/xixu-me/X-WebUI/raw/main/setup.sh | bash -s <username> <domain> <id>
 ```
 
-### Nginx Configuration
+Replace the following:
 
-Main configuration file: `/etc/nginx/nginx.conf`
+- `<username>`: Your login username
+- `<domain>`: Your domain name (must be pointed to this server)
+- `<id>`: A unique ID for the X configuration
 
-To reload Nginx after changes:
+If you encounter the following error:
 
 ```bash
-sudo systemctl reload nginx
+bash: curl: command not found
 ```
 
-## 🐛 Troubleshooting
+Please install `curl` and `bash` first:
 
-### Common Issues
+```bash
+sudo apt update && sudo apt install -y curl bash
+```
 
-1. **Domain not pointing to server**: Ensure DNS A record points to your server's IP
-2. **Firewall blocking ports**: Make sure ports 80 and 443 are open
-3. **Permission errors**: Ensure script is run with appropriate privileges
+## Features
 
-### Log Files
+### Web Server
 
-- Nginx access logs: `/var/log/nginx/access.log`
-- Nginx error logs: `/var/log/nginx/error.log`
-- System logs: `journalctl -u nginx`
+- Configures Nginx
+- Sets up automatic HTTPS redirection
+- Implements proper security headers
 
-## 📝 License
+### SSL/TLS Certificates
 
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+- Automatically obtains and configures Let's Encrypt certificates
+- Sets up automatic renewal via cron job
 
-## ⚠️ Important Notes
+### Docker Environment
 
-- This script will reboot the server at the end of installation
-- Backup any existing Nginx configuration before running
-- The script is designed for fresh server installations
-- Domain validation is required for SSL certificate issuance
+- Installs Docker and Docker Compose
+- Configures Open WebUI in a Docker container
+- Sets up proper restart policies
+
+### Proxy Configuration
+
+- Installs and configures X
+- Implements secure TLS settings
+- Configures proper routing rules
+
+## Security Considerations
+
+This script implements several security best practices:
+
+- Uses TLS 1.2+ for all connections
+- Implements proper certificate handling
+- Configures firewall rules to block unwanted traffic
+- Sets up proper user permissions
+
+## Disclaimer
+
+1. This repository is strictly for educational and research purposes.
+2. Use at your own risk. The repository assumes no responsibility for potential issues.
+3. No guarantee of accuracy, completeness, or reliability.
+4. Not liable for data loss or damages.
+5. Ensure compliance with relevant licenses and legal regulations.
+6. No endorsement of third-party hardware/software.
+7. User modifications are their own responsibility.
+8. Terms may change at any time. By using this repository, you agree to these terms.
+
+## License
+
+Copyright &copy; [Xi Xu](https://xi-xu.me). All rights reserved.
+
+Licensed under the [GPL-3.0](LICENSE) license.  
